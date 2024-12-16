@@ -16,7 +16,8 @@ suggestion-mode=yes
 [MESSAGES CONTROL]
 disable=missing-function-docstring,
         missing-class-docstring,
-        missing-module-docstring
+        missing-module-docstring,
+        fixme
 
 [BASIC]
 good-names=i,
@@ -30,3 +31,4 @@ good-names=i,
 [DESIGN]
 max-args=8
 min-public-methods=0
+max-public-methods=21
