@@ -1,0 +1,7 @@
+fild==0.1.0
+fild-cfg==0.0.1
+fild-compare==0.0.3
+Pillow==10.0.1
+pytest==8.3.4
+selenium==4.13.0
+waiting==1.5.0
