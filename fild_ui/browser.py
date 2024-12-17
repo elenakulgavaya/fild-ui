@@ -9,7 +9,7 @@ from selenium.common.exceptions import (
     ElementClickInterceptedException, StaleElementReferenceException,
     WebDriverException,
 )
-from selenium.webdriver import Chrome
+from selenium.webdriver import Chrome, Remote
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from waiting import wait, TimeoutExpired
@@ -70,7 +70,13 @@ class Browser(metaclass=Singleton):
                 'pageLoadStrategy': 'none',
             })
 
-            self._driver = Chrome(options=options)
+            if Cfg.Browser.get('remote_url'):
+                self._driver = Remote(
+                    options=options, command_executor=Cfg.Browser.remote_url
+                )
+            else:
+                self._driver = Chrome(options=options)
+
             self._driver.set_page_load_timeout(15)
             self._driver.set_window_size(1680, 1050)
 
