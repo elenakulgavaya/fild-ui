@@ -66,6 +66,8 @@ class Browser(metaclass=Singleton):
 
             if Cfg.Browser.get('no_sandbox'):
                 options.add_argument('--no-sandbox')
+                options.add_argument('--disable-setuid-sandbox')
+                options.add_argument('--disable-dev-shm-usage')
 
             options.add_experimental_option('prefs', {
                 'download.default_directory':
