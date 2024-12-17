@@ -64,6 +64,9 @@ class Browser(metaclass=Singleton):
             if Cfg.Browser.get('devtools'):
                 options.add_argument('--auto-open-devtools-for-tabs')
 
+            if Cfg.Browser.get('no_sandbox'):
+                options.add_argument('--no-sandbox')
+
             options.add_experimental_option('prefs', {
                 'download.default_directory':
                     str(folder.generate_path('downloads').absolute()),
