@@ -63,3 +63,11 @@ class LocalStorage:
             expected=expected_data,
             actual=actual and json.loads(base64.b64decode(actual))
         )
+
+    @classmethod
+    def verify_item(cls, key, expected):
+        actual = cls.get_item(key)
+        compare(
+            expected=expected,
+            actual=actual and json.loads(actual)
+        )
