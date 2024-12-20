@@ -13,6 +13,10 @@ class Container(Element):
 
 
 class Button(Element):
+    @property
+    def text(self):
+        return self.located.text
+
     def click(self):
         self._target = None
         self.scroll_to()
