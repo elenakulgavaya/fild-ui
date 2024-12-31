@@ -65,9 +65,10 @@ class LocalStorage:
         )
 
     @classmethod
-    def verify_item(cls, key, expected):
+    def verify_item(cls, key, expected, rules=None):
         actual = cls.get_item(key)
         compare(
             expected=expected,
-            actual=actual and json.loads(actual)
+            actual=actual and json.loads(actual),
+            rules=rules
         )
