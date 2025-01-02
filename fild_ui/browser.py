@@ -298,6 +298,10 @@ class Element:
 
         return self.located.__getattribute__(item)
 
+    @property
+    def text(self):
+        return self.located.text
+
     def wait_for_load(self, timeout_seconds=2):
         wait(lambda: self.is_present(timeout=1),
              timeout_seconds=timeout_seconds,
