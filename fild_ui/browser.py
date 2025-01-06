@@ -57,6 +57,7 @@ class Browser(metaclass=Singleton):
             options.add_argument('--disable-gpu')
             options.add_argument('--hide-scrollbars')
             options.add_argument('--disable-site-isolation-trials')
+            options.add_argument('--remote-debugging-pipe')
 
             if Cfg.Browser.headless:
                 options.add_argument('--headless=new')
