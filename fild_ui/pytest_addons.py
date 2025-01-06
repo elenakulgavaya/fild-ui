@@ -7,6 +7,7 @@ from functools import wraps
 import pytest
 
 from fild_cfg import Cfg
+from selenium.common.exceptions import WebDriverException
 
 from fild_ui import folder
 from fild_ui.browser import Browser
@@ -35,7 +36,10 @@ def save_screenshot_on_failure(outcome, item):
 
         file_name = folder.generate_file_name(test_name)
         file_path = folder.generate_file_path('screenshots', file_name)
-        Browser().driver.save_screenshot(file_path)
+        try:
+            Browser().driver.save_screenshot(file_path)
+        except WebDriverException:
+            pass
 
 
 def compare_screenshot(func):
