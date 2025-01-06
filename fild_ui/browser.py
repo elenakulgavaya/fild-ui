@@ -163,6 +163,20 @@ class Page:
         )
 
     @classmethod
+    def is_open(cls, *args, url_postfix=None, skip_params=True):
+        actual = cls.get_current_url()
+
+        if skip_params:
+            actual = actual.split('?')[0]
+
+        page_url = (
+            f'{cls.base_url}/{(cls.url or "").format(*args)}'
+            f'{url_postfix or ""}'
+        )
+
+        return page_url == actual
+
+    @classmethod
     def verify_current_url(cls, *args, url_postfix=None, skip_params=True):
         actual = cls.get_current_url()
 
