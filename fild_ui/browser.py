@@ -57,6 +57,9 @@ class Browser(metaclass=Singleton):
             options.add_argument('--disable-gpu')
             options.add_argument('--hide-scrollbars')
             options.add_argument('--disable-site-isolation-trials')
+
+            # fixing chrome issues
+            options.add_argument('enable-automation')
             options.add_argument('--remote-debugging-pipe')
 
             if Cfg.Browser.headless:
@@ -69,6 +72,9 @@ class Browser(metaclass=Singleton):
                 options.add_argument('--no-sandbox')
                 options.add_argument('--disable-setuid-sandbox')
                 options.add_argument('--disable-dev-shm-usage')
+                options.add_argument('--disable-infobars')
+                options.add_argument('--disable-browser-side-navigation')
+                options.add_argument('--disable-gpu')
 
             options.add_experimental_option('prefs', {
                 'download.default_directory':
