@@ -54,19 +54,17 @@ class Browser(metaclass=Singleton):
             options.add_argument('--allow-insecure-localhost')
             options.add_argument('--ignore-certificate-errors')
             options.add_argument('--disable-web-security')
-            options.add_argument('--disable-gpu')
             options.add_argument('--hide-scrollbars')
             options.add_argument('--disable-site-isolation-trials')
 
-            # fixing chrome issues
-            options.add_experimental_option(
-                'excludeSwitches', ['enable-automation']
-            )
-            options.add_experimental_option('useAutomationExtension', False)
-            options.add_argument('--remote-debugging-pipe')
-
             if Cfg.Browser.headless:
                 options.add_argument('--headless=new')
+                # fixing chrome issues
+                options.add_experimental_option(
+                    'excludeSwitches', ['enable-automation']
+                )
+                options.add_experimental_option('useAutomationExtension', False)
+                options.add_argument('--remote-debugging-pipe')
 
             if Cfg.Browser.get('devtools'):
                 options.add_argument('--auto-open-devtools-for-tabs')
