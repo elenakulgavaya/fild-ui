@@ -518,6 +518,12 @@ class Elements(Element):
             refresh=Browser.recreate_session
         )
 
+    def click_by_text(self, text, strip=False):
+        retry_on_js_reload(
+            function=lambda: self._get_by_text(text=text, strip=strip).click(),
+            refresh=Browser.recreate_session
+        )
+
     def wait_for_items_load(self, items_count, timeout_seconds=2):
         def check_count():
             if not items_count:
