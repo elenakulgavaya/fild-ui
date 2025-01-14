@@ -500,7 +500,7 @@ class Elements(Element):
 
         return None
 
-    def get_by_text(self, text, strip=False):
+    def _get_by_text(self, text, strip=False):
         for element in self.located:
             current = element.text
 
@@ -511,6 +511,12 @@ class Elements(Element):
                 return element
 
         return None
+
+    def get_by_text(self, text, strip=False):
+        return retry_on_js_reload(
+            function=lambda: self._get_by_text(text=text, strip=strip),
+            refresh=Browser.recreate_session
+        )
 
     def wait_for_items_load(self, items_count, timeout_seconds=2):
         def check_count():
@@ -537,7 +543,10 @@ class Elements(Element):
              waiting_for='some items to load')
 
     def get_labels(self):
-        return [item.text for item in self.located]
+        return retry_on_js_reload(
+            function=lambda: [item.text for item in self.located],
+            refresh=Browser.recreate_session
+        )
 
     def verify_labels(self, expected):
         compare(
