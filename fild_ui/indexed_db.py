@@ -11,15 +11,26 @@ class Command:
                 let transaction = db.transaction("{1}", "readonly"); 
                 let store = transaction.objectStore("{1}");
                 let allRecords = store.getAll();
-                
-                allRecords.onsuccess = function() {{
-                    resolve(allRecords.result);
+                let dict = {{}};
+
+                let cursorRequest = store.openCursor();
+                cursorRequest.onsuccess = function(event) {{
+                    let cursor = event.target.result;
+                    if (cursor) {{
+                        // Convert composite key (array or object) into a string key
+                        let key = typeof cursor.key === 'object' 
+                            ? JSON.stringify(cursor.key) 
+                            : String(cursor.key);
+                        dict[cursor.key] = cursor.value;
+                        cursor.continue();
+                    }} else {{
+                        resolve(dict);  // Done reading all entries
+                    }}
                 }};
-                allRecords.onerror = function() {{
-                    reject("Error reading IndexedDB");
+                cursorRequest.onerror = function() {{
+                    reject("Cursor error reading IndexedDB");
                 }};
             }};
-            
             request.onerror = function() {{
                 reject("IndexedDB open failed");
             }};
@@ -27,24 +38,40 @@ class Command:
     """
     DELETE_ALL = """
         return new Promise((resolve, reject) => {{
-            let request = indexedDB.open("{0}");  
-
+            let request = indexedDB.open("{0}");
+        
+            request.onupgradeneeded = function(event) {{
+                // Database exists but doesn't contain the object store
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains("{1}")) {{
+                    // Do not create the store; abort
+                    event.target.transaction.abort();
+                }}
+            }};
+        
             request.onsuccess = function(event) {{
                 let db = event.target.result;
+        
+                if (!db.objectStoreNames.contains("{1}")) {{
+                    db.close();
+                    resolve("Object store does not exist; nothing to delete.");
+                    return;
+                }}
+        
                 let transaction = db.transaction("{1}", "readwrite");
                 let store = transaction.objectStore("{1}");
                 let deleteRequest = store.clear();
-
+        
                 deleteRequest.onsuccess = function() {{
                     resolve("Deletion successful");
                 }};
-                deleteRequest.onerror = function() {{
-                    reject("Error deleting record");
+                deleteRequest.onerror = function(e) {{
+                    reject("Error deleting records: " + e.target.error);
                 }};
             }};
-
-            request.onerror = function() {{
-                reject("IndexedDB open failed");
+        
+            request.onerror = function(e) {{
+                resolve("Database could not be opened; assuming it doesn't exist.");
             }};
         }});
     """
