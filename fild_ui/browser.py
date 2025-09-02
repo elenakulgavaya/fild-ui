@@ -554,6 +554,23 @@ class Elements(Element):
             refresh=Browser.recreate_session
         )
 
+    def get_not_empty_labels(self):
+        return retry_on_js_reload(
+            function=lambda: [item.text for item in self.located if item.text],
+            refresh=Browser.recreate_session
+        )
+
+    def wait_for_labels(self, count, timeout_seconds=2):
+        def check_count():
+            Browser().recreate_session()
+            labels = self.get_not_empty_labels()
+
+            return labels and len(labels) == count
+
+        wait(check_count,
+             timeout_seconds=timeout_seconds,
+             waiting_for='some items to load')
+
     def verify_labels(self, expected):
         compare(
             expected=expected,
